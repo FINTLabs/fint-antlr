@@ -1,5 +1,7 @@
 package no.fint.antlr.odata;
 
+import no.fint.antlr.FintFilterErrorListener;
+import no.fint.antlr.FintFilterService;
 import no.fint.antlr.ODataLexer;
 import no.fint.antlr.ODataParser;
 import no.fint.antlr.exception.FilterException;
@@ -9,12 +11,10 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ConsoleErrorListener;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.springframework.stereotype.Service;
 
 import java.util.stream.Stream;
 
-@Service
-public class ODataFilter {
+public class ODataFilterService implements FintFilterService {
 
     public <T> Stream<T> from(Stream<T> resources, String filter) {
         ODataLexer lexer = new ODataLexer(CharStreams.fromString(filter));
@@ -22,7 +22,7 @@ public class ODataFilter {
 
         ODataParser parser = new ODataParser(tokens);
         parser.removeErrorListener(ConsoleErrorListener.INSTANCE);
-        parser.addErrorListener(ODataErrorListener.INSTANCE);
+        parser.addErrorListener(FintFilterErrorListener.INSTANCE);
 
         ParseTree parseTree;
 

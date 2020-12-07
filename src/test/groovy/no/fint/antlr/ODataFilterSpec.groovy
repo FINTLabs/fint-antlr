@@ -1,7 +1,7 @@
 package no.fint.antlr
 
 import no.fint.antlr.exception.FilterException
-import no.fint.antlr.odata.ODataFilter
+import no.fint.antlr.odata.ODataFilterService
 import no.fint.model.felles.Person
 import no.fint.model.felles.kompleksedatatyper.Identifikator
 import no.fint.model.felles.kompleksedatatyper.Periode
@@ -16,14 +16,14 @@ import java.util.stream.Stream
 
 class ODataFilterSpec extends Specification {
 
-    ODataFilter filterEngine = new ODataFilter()
+    ODataFilterService oDataFilterService = new ODataFilterService()
 
     def "Invalid syntax throws exception"() {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id', '01010122222', '2020-11-25T10:30:30Z'))
 
         when:
-        filterEngine.from(resources, 'systemId/identifikatorverdi = \'system-id\'')
+        oDataFilterService.from(resources, 'systemId/identifikatorverdi = \'system-id\'')
 
         then:
         thrown(FilterException)
@@ -34,7 +34,7 @@ class ODataFilterSpec extends Specification {
         def resources = Stream.of(newSamtykkeResource('system-id', '01010122222', '2020-11-25T10:30:30Z'))
 
         when:
-        filterEngine.from(resources, 'systemId/identifikato eq \'system-id\'').collect(Collectors.toList())
+        oDataFilterService.from(resources, 'systemId/identifikato eq \'system-id\'').collect(Collectors.toList())
 
         then:
         thrown(FilterException)
@@ -45,7 +45,7 @@ class ODataFilterSpec extends Specification {
         def resources = Stream.of(newSamtykkeResource('system-id', '01010122222', '2020-11-25T10:30:30Z'))
 
         when:
-        filterEngine.from(resources, 'systemId/gyldighetsperiode/start eq \'2020-12-01T\'').collect(Collectors.toList())
+        oDataFilterService.from(resources, 'systemId/gyldighetsperiode/start eq \'2020-12-01T\'').collect(Collectors.toList())
 
         then:
         thrown(FilterException)
@@ -56,7 +56,7 @@ class ODataFilterSpec extends Specification {
         def resources = Stream.of(newSamtykkeResource('system-id', '01010122222', '2020-11-25T10:30:30Z'))
 
         when:
-        filterEngine.from(resources, 'systemId/gyldighetsperiode/any(s:s/start eq \'2020-11-25T10:30:30Z\'').collect(Collectors.toList())
+        oDataFilterService.from(resources, 'systemId/gyldighetsperiode/any(s:s/start eq \'2020-11-25T10:30:30Z\'').collect(Collectors.toList())
 
         then:
         thrown(FilterException)
@@ -69,7 +69,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'systemId/identifikatorverdi eq \'system-id-1\'')
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi eq \'system-id-1\'')
 
         then:
         test.count() == 1
@@ -82,7 +82,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'systemId/identifikatorverdi ne \'system-id-1\'')
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi ne \'system-id-1\'')
 
         then:
         test.count() == 2
@@ -95,7 +95,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'systemId/identifikatorverdi gt \'system-id-1\'')
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi gt \'system-id-1\'')
 
         then:
         test.count() == 2
@@ -108,7 +108,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'systemId/identifikatorverdi lt \'system-id-1\'')
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi lt \'system-id-1\'')
 
         then:
         test.count() == 0
@@ -121,7 +121,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'systemId/identifikatorverdi ge \'system-id-1\'')
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi ge \'system-id-1\'')
 
         then:
         test.count() == 3
@@ -134,7 +134,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'systemId/identifikatorverdi le \'system-id-1\'')
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi le \'system-id-1\'')
 
         then:
         test.count() == 1
@@ -145,7 +145,7 @@ class ODataFilterSpec extends Specification {
         def resources = Stream.of(newBehandlingResource(true), newBehandlingResource(true), newBehandlingResource(false))
 
         when:
-        def test = filterEngine.from(resources, 'aktiv eq \'true\'')
+        def test = oDataFilterService.from(resources, 'aktiv eq \'true\'')
 
         then:
         test.count() == 2
@@ -156,7 +156,7 @@ class ODataFilterSpec extends Specification {
         def resources = Stream.of(newBehandlingResource(true), newBehandlingResource(true), newBehandlingResource(false))
 
         when:
-        def test = filterEngine.from(resources, 'aktiv ne \'true\'')
+        def test = oDataFilterService.from(resources, 'aktiv ne \'true\'')
 
         then:
         test.count() == 1
@@ -169,7 +169,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'opprettet eq \'2020-11-25T10:30:30Z\'')
+        def test = oDataFilterService.from(resources, 'opprettet eq \'2020-11-25T10:30:30Z\'')
 
         then:
         test.count() == 2
@@ -182,7 +182,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'opprettet ne \'2020-11-25T10:30:30Z\'')
+        def test = oDataFilterService.from(resources, 'opprettet ne \'2020-11-25T10:30:30Z\'')
 
         then:
         test.count() == 1
@@ -195,7 +195,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'opprettet gt \'2020-11-25T10:30:30Z\'')
+        def test = oDataFilterService.from(resources, 'opprettet gt \'2020-11-25T10:30:30Z\'')
 
         then:
         test.count() == 1
@@ -208,7 +208,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'opprettet lt \'2020-11-25T11:30:30Z\'')
+        def test = oDataFilterService.from(resources, 'opprettet lt \'2020-11-25T11:30:30Z\'')
 
         then:
         test.count() == 2
@@ -221,7 +221,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'opprettet ge \'2020-11-25T10:30:30Z\'')
+        def test = oDataFilterService.from(resources, 'opprettet ge \'2020-11-25T10:30:30Z\'')
 
         then:
         test.count() == 3
@@ -234,7 +234,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'opprettet le \'2020-11-25T10:30:30Z\'')
+        def test = oDataFilterService.from(resources, 'opprettet le \'2020-11-25T10:30:30Z\'')
 
         then:
         test.count() == 2
@@ -247,7 +247,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'links/person/any(p:p/href eq \'${felles.person}/fodselsnummer/01010111111\')')
+        def test = oDataFilterService.from(resources, 'links/person/any(p:p/href eq \'${felles.person}/fodselsnummer/01010111111\')')
 
         then:
         test.count() == 1
@@ -260,7 +260,7 @@ class ODataFilterSpec extends Specification {
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
 
         when:
-        def test = filterEngine.from(resources, 'links/person/any(p:p/href ne \'${felles.person}/fodselsnummer/01010111111\')')
+        def test = oDataFilterService.from(resources, 'links/person/any(p:p/href ne \'${felles.person}/fodselsnummer/01010111111\')')
 
         then:
         test.count() == 2

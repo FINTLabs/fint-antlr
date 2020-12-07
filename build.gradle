@@ -1,13 +1,11 @@
 plugins {
     id 'org.springframework.boot' version '2.4.0'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-    id 'java'
+    id 'com.jfrog.bintray' version '1.8.5'
+    id 'java-library'
     id 'groovy'
     id 'antlr'
 }
-
-group 'no.fint'
-version '1.0-SNAPSHOT'
 
 configurations {
     compileOnly {
@@ -15,8 +13,11 @@ configurations {
     }
 }
 
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
 repositories {
-    mavenCentral()
+    jcenter()
     maven { url "https://dl.bintray.com/fint/maven" }
 }
 
@@ -45,4 +46,8 @@ bootJar {
 
 jar {
     enabled = true
+}
+
+if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayKey')) {
+    apply from: 'https://raw.githubusercontent.com/FINTlibs/fint-buildscripts/v1.7.0/bintray.gradle'
 }
