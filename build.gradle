@@ -4,6 +4,7 @@ plugins {
     id 'com.jfrog.bintray' version '1.8.5'
     id 'java-library'
     id 'java'
+    id 'maven'
     id 'groovy'
     id 'antlr'
 }
@@ -19,6 +20,7 @@ targetCompatibility = '1.8'
 
 repositories {
     jcenter()
+    mavenLocal()
     maven { url "https://dl.bintray.com/fint/maven" }
 }
 
