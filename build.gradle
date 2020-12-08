@@ -2,8 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.4.0'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'com.jfrog.bintray' version '1.8.5'
-    id 'java-library'
-    id 'maven-publish'
+    id 'java'
     id 'groovy'
     id 'antlr'
 }
@@ -14,8 +13,6 @@ configurations {
     }
 }
 
-group = 'no.fint'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
@@ -39,33 +36,6 @@ dependencies {
     antlr 'org.antlr:antlr4:4.8'
 }
 
-publishing {
-    publications {
-        MyPublication(MavenPublication) {
-            from components.java
-            groupId 'no.fint'
-            artifactId 'fint-antlr'
-            version '1.0.0-alpha-6'
-        }
-    }
-}
-
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintrayKey') ? project.property('bintrayKey') : System.getenv('BINTRAY_KEY')
-    publications = ['MyPublication']
-    pkg {
-        repo = 'maven'
-        name = 'fint-antlr'
-        userOrg = 'fint'
-        licenses = ['Apache-2.0']
-        vcsUrl = "https://github.com/FINTLabs/fint-antlr.git"
-        version {
-            name = '1.0.0-alpha-6'
-        }
-    }
-}
-
 generateGrammarSource {
     arguments += ["-visitor"]
 }
@@ -76,4 +46,8 @@ bootJar {
 
 jar {
     enabled = true
+}
+
+if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayKey')) {
+    apply from: 'https://raw.githubusercontent.com/FINTLabs/fint-buildscripts/v1.8.0/bintray.gradle'
 }
