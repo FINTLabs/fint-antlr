@@ -56,7 +56,7 @@ class ODataFilterSpec extends Specification {
         def resources = Stream.of(newSamtykkeResource('system-id', '01010122222', '2020-11-25T10:30:30Z'))
 
         when:
-        oDataFilterService.from(resources, 'systemId/gyldighetsperiode/any(s:s/start eq \'2020-11-25T10:30:30Z\'').collect(Collectors.toList())
+        oDataFilterService.from(resources, 'systemId/gyldighetsperiode/any(s:s/start eq \'2020-11-25T10:30:30Z\')').collect(Collectors.toList())
 
         then:
         thrown(FilterException)
@@ -66,7 +66,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi eq \'system-id-1\'')
@@ -79,7 +80,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi ne \'system-id-1\'')
@@ -92,7 +94,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi gt \'system-id-1\'')
@@ -105,7 +108,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi lt \'system-id-1\'')
@@ -118,7 +122,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi ge \'system-id-1\'')
@@ -131,7 +136,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi le \'system-id-1\'')
@@ -142,7 +148,7 @@ class ODataFilterSpec extends Specification {
 
     def "Boolean equals"() {
         given:
-        def resources = Stream.of(newBehandlingResource(true), newBehandlingResource(true), newBehandlingResource(false))
+        def resources = Stream.of(newBehandlingResource(true), newBehandlingResource(true), newBehandlingResource(false), new BehandlingResource())
 
         when:
         def test = oDataFilterService.from(resources, 'aktiv eq \'true\'')
@@ -153,7 +159,7 @@ class ODataFilterSpec extends Specification {
 
     def "Boolean not equals"() {
         given:
-        def resources = Stream.of(newBehandlingResource(true), newBehandlingResource(true), newBehandlingResource(false))
+        def resources = Stream.of(newBehandlingResource(true), newBehandlingResource(true), newBehandlingResource(false), new BehandlingResource())
 
         when:
         def test = oDataFilterService.from(resources, 'aktiv ne \'true\'')
@@ -166,7 +172,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'opprettet eq \'2020-11-25T10:30:30Z\'')
@@ -179,7 +186,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'opprettet ne \'2020-11-25T10:30:30Z\'')
@@ -192,7 +200,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'opprettet gt \'2020-11-25T10:30:30Z\'')
@@ -205,7 +214,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'opprettet lt \'2020-11-25T11:30:30Z\'')
@@ -218,7 +228,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'opprettet ge \'2020-11-25T10:30:30Z\'')
@@ -231,7 +242,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T11:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'opprettet le \'2020-11-25T10:30:30Z\'')
@@ -244,7 +256,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'links/person/any(p:p/href eq \'${felles.person}/fodselsnummer/01010111111\')')
@@ -257,7 +270,8 @@ class ODataFilterSpec extends Specification {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
-                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'))
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
 
         when:
         def test = oDataFilterService.from(resources, 'links/person/any(p:p/href ne \'${felles.person}/fodselsnummer/01010111111\')')

@@ -25,24 +25,8 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
     }
 
     @Override
-    public Boolean visitComparisonOperator(ODataParser.ComparisonOperatorContext ctx) {
-        this.comparisonOperator = ctx.getText();
-
-        return true;
-    }
-
-    @Override
-    public Boolean visitLambdaOperator(ODataParser.LambdaOperatorContext ctx) {
-        this.lambdaOperator = ctx.getText();
-
-        return true;
-    }
-
-    @Override
-    public Boolean visitCollection(ODataParser.CollectionContext ctx) {
-        this.collection = ctx.getText().replaceAll("/", ".");
-
-        return true;
+    public Boolean visitFilter(ODataParser.FilterContext ctx) {
+        return ctx.lambda() == null ? visit(ctx.comparison()) : visit(ctx.lambda());
     }
 
     @Override
@@ -60,35 +44,7 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
         visit(ctx.value());
 
         try {
-            if (this.collection == null) {
-                Object property = PropertyUtils.getProperty(object, this.property);
-
-                if (property == null) {
-                    return false;
-                }
-                return compare(property, value);
-            } else {
-                Object collectionProperty = PropertyUtils.getProperty(object, this.collection);
-
-                if (collectionProperty == null) {
-                    return false;
-                }
-
-                if (collectionProperty instanceof List) {
-                    List<Object> collectionObjects = new ArrayList<>((List<?>) collectionProperty);
-
-                    for (Object collectionObject : collectionObjects) {
-                        Object collectionObjectProperty = PropertyUtils.getProperty(collectionObject, this.property);
-
-                        if (compare(collectionObjectProperty, value)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                } else {
-                    throw new InvalidArgumentException(String.format("%s is not a collection", this.collection));
-                }
-            }
+            return this.collection == null ? objectComparison() : collectionComparison();
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
             throw new InvalidArgumentException(ex);
         } catch (NestedNullException ex) {
@@ -97,8 +53,17 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
     }
 
     @Override
-    public Boolean visitFilter(ODataParser.FilterContext ctx) {
-        return ctx.lambda() == null ? visit(ctx.comparison()) : visit(ctx.lambda());
+    public Boolean visitCollection(ODataParser.CollectionContext ctx) {
+        this.collection = ctx.getText().replaceAll("/", ".");
+
+        return true;
+    }
+
+    @Override
+    public Boolean visitLambdaOperator(ODataParser.LambdaOperatorContext ctx) {
+        this.lambdaOperator = ctx.getText();
+
+        return true;
     }
 
     @Override
@@ -109,10 +74,51 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
     }
 
     @Override
+    public Boolean visitComparisonOperator(ODataParser.ComparisonOperatorContext ctx) {
+        this.comparisonOperator = ctx.getText();
+
+        return true;
+    }
+
+    @Override
     public Boolean visitValue(ODataParser.ValueContext ctx) {
         this.value = ctx.getText().replaceAll("'", "");
 
         return true;
+    }
+
+    private Boolean objectComparison() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, NestedNullException {
+        Object property = PropertyUtils.getProperty(object, this.property);
+
+        if (property == null) {
+            return false;
+        }
+
+        return compare(property, value);
+    }
+
+    private Boolean collectionComparison() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, NestedNullException {
+        Object collection = PropertyUtils.getProperty(object, this.collection);
+
+        if (collection == null) {
+            return false;
+        }
+
+        if (collection instanceof List) {
+            List<Object> objects = new ArrayList<>((List<?>) collection);
+
+            for (Object object : objects) {
+                Object property = PropertyUtils.getProperty(object, this.property);
+
+                if (compare(property, value)) {
+                    return true;
+                }
+            }
+
+            return false;
+        } else {
+            throw new InvalidArgumentException(String.format("%s is not a collection", this.collection));
+        }
     }
 
     private Boolean compare(Object property, String value) {
