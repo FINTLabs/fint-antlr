@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'com.jfrog.bintray' version '1.8.5'
     id 'java-library'
+    id 'maven-publish'
     id 'groovy'
     id 'antlr'
 }
@@ -49,5 +50,5 @@ jar {
 }
 
 if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayKey')) {
-    apply from: 'https://raw.githubusercontent.com/FINTlibs/fint-buildscripts/v1.7.0/bintray.gradle'
+    apply from: 'https://raw.githubusercontent.com/FINTlibs/fint-buildscripts/v1.8.0/bintray.gradle'
 }
