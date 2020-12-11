@@ -280,6 +280,38 @@ class ODataFilterSpec extends Specification {
         test.count() == 2
     }
 
+    def "List any equals"() {
+        given:
+        def resource = newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z')
+        resource.addPerson(Link.with(Person.class, 'fodselsnummer', '02020211111'))
+
+        def resources = Stream.of(newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                resource, new SamtykkeResource())
+
+        when:
+        def test = oDataFilterService.from(resources, 'links/person/any(p:p/href eq \'${felles.person}/fodselsnummer/01010111111\')')
+
+        then:
+        test.count() == 1
+    }
+
+    def "List all equals"() {
+        given:
+        def resource = newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z')
+        resource.addPerson(Link.with(Person.class, 'fodselsnummer', '02020211111'))
+
+        def resources = Stream.of(newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                resource, new SamtykkeResource())
+
+        when:
+        def test = oDataFilterService.from(resources, 'links/person/all(p:p/href eq \'${felles.person}/fodselsnummer/01010111111\')')
+
+        then:
+        test.count() == 0
+    }
+
     def newSamtykkeResource(String systemId, String fodselsnummer, String date) {
         def dateTime = ZonedDateTime.parse(date)
 

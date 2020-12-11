@@ -35,7 +35,7 @@ public class ODataFilterService implements FintFilterService {
         return resources.filter(resource -> evaluate(resource, parseTree));
     }
 
-    private static <T> boolean evaluate(T resource, ParseTree parseTree) {
+    private <T> boolean evaluate(T resource, ParseTree parseTree) {
         try {
             return new ODataEvaluator(resource).visit(parseTree);
         } catch (InvalidArgumentException ex) {

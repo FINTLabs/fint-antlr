@@ -9,6 +9,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
     private final Object object;
@@ -107,15 +108,22 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
         if (collection instanceof List) {
             List<Object> objects = new ArrayList<>((List<?>) collection);
 
+            List<Boolean> classification = new ArrayList<>(objects.size());
+
             for (Object object : objects) {
                 Object property = PropertyUtils.getProperty(object, this.property);
 
-                if (compare(property, value)) {
-                    return true;
-                }
+                classification.add(compare(property, value));
             }
 
-            return false;
+            if (lambdaOperator.equals("all")) {
+                return classification.stream().allMatch(Predicate.isEqual(Boolean.TRUE));
+            } else if (lambdaOperator.equals("any")) {
+                return classification.stream().anyMatch(Predicate.isEqual(Boolean.TRUE));
+            } else {
+                return false;
+            }
+
         } else {
             throw new InvalidArgumentException(String.format("%s is not a collection", this.collection));
         }
