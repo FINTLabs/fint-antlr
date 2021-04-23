@@ -33,6 +33,7 @@ public class Application {
 
 ```
 @RestController
+@RequestMapping("/persons")
 public class PersonController {
 
     @Autowired
@@ -45,4 +46,8 @@ public class PersonController {
         return oDataFilterService.from(persons, $filter);
     }
 }
+```
+
+```
+GET ~/persons?$filter=familyName eq 'Family name'
 ```
