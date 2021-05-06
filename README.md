@@ -14,10 +14,18 @@ Project is created with:
 
 ## Setup
 
-http://dl.bintray.com/fint/maven
+```
+repositories {
+    maven {
+        url 'https://repo.fintlabs.no/releases'
+    }
+}
+```
 
 ```
-implementation 'no.fint:fint-antlr:1.0.0-alpha-14'
+dependecies {
+    implementation 'no.fint:fint-antlr:1.0.0-beta-1'
+}
 ```
 
 ```
@@ -44,6 +52,11 @@ public class PersonController {
         Stream<Person> persons = Stream.of(new Person("Given name", "Family name"));
         
         return oDataFilterService.from(persons, $filter);
+    }
+    
+    @ExceptionHandler(FilterException.class)
+    public ResponseEntity handleFilterException(FilterException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }
 ```

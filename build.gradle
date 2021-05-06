@@ -1,10 +1,10 @@
 plugins {
     id 'org.springframework.boot' version '2.4.0'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
-    id 'com.jfrog.bintray' version '1.8.5'
     id 'java-library'
     id 'java'
     id 'maven'
+    id 'maven-publish'
     id 'groovy'
     id 'antlr'
 }
@@ -20,8 +20,10 @@ targetCompatibility = '1.8'
 
 repositories {
     jcenter()
+    maven {
+        url 'https://repo.fintlabs.no/releases'
+    }
     mavenLocal()
-    maven { url "https://dl.bintray.com/fint/maven" }
 }
 
 dependencies {
@@ -30,7 +32,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    implementation 'no.fint:fint-personvern-resource-model-java:3.6.10'
+    implementation 'no.fint:fint-personvern-resource-model-java:3.8.11'
     api 'commons-beanutils:commons-beanutils:1.9.4'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -52,6 +54,4 @@ jar {
     enabled = true
 }
 
-if (project.hasProperty('bintrayUser') && project.hasProperty('bintrayKey')) {
-    apply from: 'https://raw.githubusercontent.com/FINTLabs/fint-buildscripts/v1.8.0/bintray.gradle'
-}
+apply from: 'https://raw.githubusercontent.com/FINTLabs/fint-buildscripts/master/reposilite.gradle'
