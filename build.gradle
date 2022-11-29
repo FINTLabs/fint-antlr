@@ -7,6 +7,8 @@ plugins {
     id 'antlr'
 }
 
+group = 'no.fintlabs'
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -23,6 +25,17 @@ repositories {
     }
     mavenLocal()
     mavenCentral()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
 
 dependencies {
@@ -53,4 +66,4 @@ jar {
     enabled = true
 }
 
-apply from: 'https://raw.githubusercontent.com/FINTLabs/fint-buildscripts/master/reposilite.gradle'
+apply from: 'https://raw.githubusercontent.com/FINTLabs/fint-buildscripts/master/reposilite.ga.gradle'
