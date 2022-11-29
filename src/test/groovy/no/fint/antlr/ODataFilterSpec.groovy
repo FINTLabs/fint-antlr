@@ -312,6 +312,22 @@ class ODataFilterSpec extends Specification {
         test.count() == 0
     }
 
+    def "Validate invalid syntax"() {
+        when:
+        def result = oDataFilterService.validate('systemId/identifikatorverdi = \'system-id\'')
+
+        then:
+        !result
+    }
+
+    def "Validate valid syntax"() {
+        when:
+        def result = oDataFilterService.validate('systemId/identifikatorverdi eq \'system-id-1\'')
+
+        then:
+        result
+    }
+
     def newSamtykkeResource(String systemId, String fodselsnummer, String date) {
         def dateTime = ZonedDateTime.parse(date)
 

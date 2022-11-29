@@ -17,6 +17,20 @@ import java.util.stream.Stream;
 public class ODataFilterService implements FintFilterService {
 
     public <T> Stream<T> from(Stream<T> resources, String filter) {
+        ParseTree parseTree = getParseTree(filter);
+        return resources.filter(resource -> evaluate(resource, parseTree));
+    }
+
+    public boolean validate(String filter) {
+        try {
+            getParseTree(filter);
+            return true;
+        } catch (FilterException e) {
+            return false;
+        }
+    }
+
+    private ParseTree getParseTree(String filter) {
         ODataLexer lexer = new ODataLexer(CharStreams.fromString(filter));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 
@@ -31,8 +45,7 @@ public class ODataFilterService implements FintFilterService {
         } catch (InvalidSyntaxException ex) {
             throw new FilterException(ex);
         }
-
-        return resources.filter(resource -> evaluate(resource, parseTree));
+        return parseTree;
     }
 
     private <T> boolean evaluate(T resource, ParseTree parseTree) {
