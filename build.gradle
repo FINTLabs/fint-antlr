@@ -50,8 +50,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.spockframework:spock-spring:2.3-groovy-3.0'
 
-    antlr 'org.antlr:antlr4:4.11.0'
-    api 'org.antlr:antlr4-runtime:4.11.0'
+    antlr 'org.antlr:antlr4:4.9.3'
+    api 'org.antlr:antlr4-runtime:4.9.3'
 }
 
 generateGrammarSource {
