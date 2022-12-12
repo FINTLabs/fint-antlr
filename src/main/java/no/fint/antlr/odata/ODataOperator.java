@@ -85,14 +85,27 @@ public class ODataOperator {
     }
 
     public static Boolean startsWith(Object property, String value) {
-        return property.toString().startsWith(value);
+        if (property instanceof String) {
+            return property.toString().startsWith(value);
+        } else {
+            return false;
+        }
     }
 
     public static Boolean substringOf(Object property, String value) {
-        return property.toString().contains(value);
+        if (property instanceof String) {
+            return property.toString().contains(value);
+        } else {
+            return false;
+        }
     }
 
     public static Boolean endsWith(Object property, String value) {
-        return property.toString().endsWith(value);
+        if (property instanceof String) {
+            return property.toString().endsWith(value);
+        } else {
+            return false;
+        }
     }
+
 }
