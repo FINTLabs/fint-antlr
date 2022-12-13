@@ -343,4 +343,18 @@ class ODataFilterSpec extends Specification {
                 aktiv: aktiv
         )
     }
+
+    def "String starts with"() {
+        given:
+        def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
+
+        when:
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi startswith \'sy\'')
+
+        then:
+        test.count() == 1
+    }
 }

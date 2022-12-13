@@ -8,14 +8,7 @@ public class ODataOperator {
 
     public static Boolean eq(Object property, String value) {
         if (property instanceof String) {
-            return String.valueOf(property).equalsIgnoreCase(value);
-
-        } else if (property instanceof Boolean) {
-            return property.equals(Boolean.parseBoolean(value));
-
-        } else if (property instanceof Date) {
-            return ((Date) property).toInstant().truncatedTo(ChronoUnit.SECONDS).equals(ZonedDateTime.parse(value).toInstant().truncatedTo(ChronoUnit.SECONDS));
-
+            return property.toString().startsWith(value);
         } else {
             return false;
         }
