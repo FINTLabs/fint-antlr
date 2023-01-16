@@ -150,14 +150,14 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
                 case "le":
                     return ODataOperator.le(property, value);
 
-                case "startswith":
-                    return ODataOperator.startsWith(property, value);
+                case "contains":
+                    return ODataOperator.contains(property, value);
 
-                case "substringof":
-                    return ODataOperator.substringOf(property, value);
+                case "startswith":
+                    return ODataOperator.startswith(property, value);
 
                 case "endswith":
-                    return ODataOperator.endsWith(property, value);
+                    return ODataOperator.endswith(property, value);
 
                 default:
                     return false;

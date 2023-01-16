@@ -29,7 +29,7 @@ value
    ;
 
 comparisonOperator
-   : 'eq' | 'ne' | 'gt' | 'lt' | 'ge' | 'le'
+   : 'eq' | 'ne' | 'gt' | 'lt' | 'ge' | 'le' | 'startswith' | 'contains' | 'endswith'
    ;
 
 lambdaOperator

@@ -346,15 +346,53 @@ class ODataFilterSpec extends Specification {
 
     def "String starts with"() {
         given:
-        def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
+        def resources = Stream.of(
+                newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
                 newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-300', '01010133333', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-4', '01010133333', '2020-11-25T10:30:30Z'),
                 new SamtykkeResource())
 
         when:
-        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi startswith \'sy\'')
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi startswith \'system-id-3\'')
 
         then:
-        test.count() == 1
+        test.count() == 2
     }
+
+    def "String ends with"() {
+        given:
+        def resources = Stream.of(
+                newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-402', '01010133333', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-502', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
+
+        when:
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi endswith \'2\'')
+
+        then:
+        test.count() == 3
+    }
+
+    def "String contains"() {
+        given:
+        def resources = Stream.of(
+                newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-507', '01010122222', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-344', '01010133333', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-402', '01010133333', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-502', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
+
+        when:
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi contains \'50\'')
+
+        then:
+        test.count() == 2
+    }
+
 }
