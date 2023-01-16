@@ -13,7 +13,7 @@ lambda
    ;
 
 filter
-   : ( lambda | comparison ) EOF
+   : ( lambda | comparison ) ( ' and ' ( lambda | comparison ) )* EOF
    ;
 
 collection

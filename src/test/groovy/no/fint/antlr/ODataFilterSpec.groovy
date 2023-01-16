@@ -395,4 +395,38 @@ class ODataFilterSpec extends Specification {
         test.count() == 2
     }
 
+    def "String contains and"() {
+        given:
+        def resources = Stream.of(
+                newSamtykkeResource('system-id-01', '01010111111', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-507', '01010122222', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-344', '01010133333', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-402', '01010133333', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-502', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
+
+        when:
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi contains \'50\' and systemId/identifikatorverdi contains \'id\'')
+
+        then:
+        test.count() == 2
+    }
+
+    def "String contains and mistake"() {
+        given:
+        def resources = Stream.of(
+                newSamtykkeResource('system-id-01', '01010111111', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-507', '01010122222', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-344', '01010133333', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-402', '01010133333', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-502', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
+
+        when:
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi contains \'50\' and systemId/identifikatorverdi contains \'3\'')
+
+        then:
+        test.count() == 0
+    }
+
 }

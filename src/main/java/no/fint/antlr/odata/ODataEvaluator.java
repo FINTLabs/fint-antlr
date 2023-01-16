@@ -27,7 +27,11 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
 
     @Override
     public Boolean visitFilter(ODataParser.FilterContext ctx) {
-        return ctx.lambda() == null ? visit(ctx.comparison()) : visit(ctx.lambda());
+        return ctx.lambda().stream()
+                .map(this::visit)
+                .reduce(ctx.comparison().stream()
+                        .map(this::visit)
+                        .reduce(true, (a, b) -> a && b), (a, b) -> a && b);
     }
 
     @Override
