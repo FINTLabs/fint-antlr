@@ -13,8 +13,13 @@ lambda
    ;
 
 filter
-   : ( lambda | comparison ) ( ' and ' ( lambda | comparison ) )* EOF
-   ;
+    : (lambda | comparison) ( ' ' logicalOperator ' ' (lambda | comparison))*
+    | EOF
+    ;
+
+logicalOperator
+    : 'and' | 'or'
+    ;
 
 collection
    : property
