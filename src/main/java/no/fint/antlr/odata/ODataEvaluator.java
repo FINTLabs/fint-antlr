@@ -52,7 +52,9 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
         visit(ctx.collection());
         visit(ctx.lambdaOperator());
 
-        return visit(ctx.comparison());
+        boolean result = visit(ctx.comparison());
+        if (ctx.notOperator() != null) result = !result;
+        return result;
     }
 
     @Override
@@ -62,7 +64,9 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
         visit(ctx.value());
 
         try {
-            return this.collection == null ? objectComparison() : collectionComparison();
+            boolean result = this.collection == null ? objectComparison() : collectionComparison();
+            if(ctx.notOperator() != null) result = !result;
+            return result;
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
             throw new InvalidArgumentException(ex);
         } catch (NestedNullException ex) {

@@ -5,11 +5,11 @@ grammar OData;
 }
 
 comparison
-   : property ' ' comparisonOperator ' ' value
+   : (notOperator ' ')? property ' ' comparisonOperator ' ' value
    ;
 
 lambda
-   : collection '/' lambdaOperator '(' STRING ':' STRING '/' comparison ')'
+   : (notOperator ' ')? collection '/' lambdaOperator '(' STRING ':' STRING '/' comparison ')'
    ;
 
 filter
@@ -19,6 +19,10 @@ filter
 
 logicalOperator
     : 'and' | 'or'
+    ;
+
+notOperator
+    : 'not'
     ;
 
 collection
