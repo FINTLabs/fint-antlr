@@ -5,16 +5,25 @@ grammar OData;
 }
 
 comparison
-   : property ' ' comparisonOperator ' ' value
+   : (notOperator ' ')? property ' ' comparisonOperator ' ' value
    ;
 
 lambda
-   : collection '/' lambdaOperator '(' STRING ':' STRING '/' comparison ')'
+   : (notOperator ' ')? collection '/' lambdaOperator '(' STRING ':' STRING '/' comparison ')'
    ;
 
 filter
-   : ( lambda | comparison ) EOF
-   ;
+    : (lambda | comparison) ( ' ' logicalOperator ' ' (lambda | comparison))*
+    | EOF
+    ;
+
+logicalOperator
+    : 'and' | 'or'
+    ;
+
+notOperator
+    : 'not'
+    ;
 
 collection
    : property
@@ -29,7 +38,7 @@ value
    ;
 
 comparisonOperator
-   : 'eq' | 'ne' | 'gt' | 'lt' | 'ge' | 'le'
+   : 'eq' | 'ne' | 'gt' | 'lt' | 'ge' | 'le' | 'startswith' | 'contains' | 'endswith'
    ;
 
 lambdaOperator

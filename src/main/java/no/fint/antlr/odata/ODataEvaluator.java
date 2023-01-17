@@ -1,5 +1,6 @@
 package no.fint.antlr.odata;
 
+import lombok.extern.slf4j.Slf4j;
 import no.fint.antlr.ODataBaseVisitor;
 import no.fint.antlr.ODataParser;
 import no.fint.antlr.exception.InvalidArgumentException;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
+@Slf4j
 public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
     private final Object object;
 
@@ -27,7 +29,22 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
 
     @Override
     public Boolean visitFilter(ODataParser.FilterContext ctx) {
-        return ctx.lambda() == null ? visit(ctx.comparison()) : visit(ctx.lambda());
+        if (ctx == null) return false;
+        if (ctx.lambda().size() == 0 && ctx.comparison().size() == 0) return false;
+
+        Boolean result = (ctx.lambda() != null && ctx.lambda().size() > 0) ? visit(ctx.lambda(0)) : visit(ctx.comparison(0));
+        if (ctx.logicalOperator() != null) {
+            for (int i = 0; i < ctx.logicalOperator().size(); i++) {
+                String operator = ctx.logicalOperator(i).getText();
+                Boolean nextResult = !ctx.lambda().isEmpty() ? visit(ctx.lambda(i + 1)) : visit(ctx.comparison(i + 1));
+                if (operator.equals("and")) {
+                    result = result && nextResult;
+                } else if (operator.equals("or")) {
+                    result = result || nextResult;
+                }
+            }
+        }
+        return result;
     }
 
     @Override
@@ -35,7 +52,9 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
         visit(ctx.collection());
         visit(ctx.lambdaOperator());
 
-        return visit(ctx.comparison());
+        boolean result = visit(ctx.comparison());
+        if (ctx.notOperator() != null) result = !result;
+        return result;
     }
 
     @Override
@@ -45,7 +64,9 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
         visit(ctx.value());
 
         try {
-            return this.collection == null ? objectComparison() : collectionComparison();
+            boolean result = this.collection == null ? objectComparison() : collectionComparison();
+            if(ctx.notOperator() != null) result = !result;
+            return result;
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
             throw new InvalidArgumentException(ex);
         } catch (NestedNullException ex) {
@@ -149,6 +170,15 @@ public class ODataEvaluator extends ODataBaseVisitor<Boolean> {
 
                 case "le":
                     return ODataOperator.le(property, value);
+
+                case "contains":
+                    return ODataOperator.contains(property, value);
+
+                case "startswith":
+                    return ODataOperator.startswith(property, value);
+
+                case "endswith":
+                    return ODataOperator.endswith(property, value);
 
                 default:
                     return false;

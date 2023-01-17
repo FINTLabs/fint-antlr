@@ -83,4 +83,29 @@ public class ODataOperator {
             return false;
         }
     }
+
+    public static Boolean startswith(Object property, String value) {
+        if (property instanceof String) {
+            return property.toString().startsWith(value);
+        } else {
+            return false;
+        }
+    }
+
+    public static Boolean endswith(Object property, String value) {
+        if (property instanceof String) {
+            return property.toString().endsWith(value);
+        } else {
+            return false;
+        }
+    }
+
+    public static Boolean contains(Object property, String value) {
+        if (property instanceof String) {
+            return property.toString().contains(value);
+        } else {
+            return false;
+        }
+    }
+
 }
