@@ -10,7 +10,7 @@ import spock.lang.Specification
 import java.time.ZonedDateTime
 import java.util.stream.Stream
 
-class ODataFilterAndOrFilterSpec extends Specification{
+class ODataFilterAndOrSpec extends Specification{
 
     def "String contains and"() {
         given:
