@@ -63,7 +63,7 @@ public class PersonController {
 
 ## ODataFilter examples
 
-### Comparison operators
+### Logical Operators
 #### equals
 ```
 GET ~/persons?$filter=familyName eq 'Family name'
@@ -88,6 +88,21 @@ GET ~/persons?$filter=opprettet lt '2021-6-13T11:35:20Z'
 ```
 GET ~/persons?$filter=opprettet le '2021-6-13T11:35:20Z'
 ```
+#### and
+```
+GET ~/identifikatorverdi?$filter=systemid contains '50' and systemid contains 'id'
+```
+#### or
+```
+GET ~/identifikatorverdi?$filter=systemid contains '4' or systemid contains '2'
+```
+#### not
+```
+GET ~/identifikatorverdi?$filter=not systemid contains '4'
+GET ~/identifikatorverdi?$filter=systemid contains '4' and not systemid contains '2'
+```
+
+### String and Collection Functions
 #### starts with
 ```
 GET ~/persons?$filter=lastName startswith 'Kn'
@@ -109,19 +124,4 @@ GET ~/persons?$filter=any(p:p/href ne '${felles.person}/fodselsnummer/0101011111
 #### all
 ```
 GET ~/persons?$filter=all(p:p/href eq '${felles.person}/fodselsnummer/04821648912')
-```
-
-### Logical operators
-#### and
-```
-GET ~/identifikatorverdi?$filter=systemid contains '50' and systemid contains 'id'
-```
-#### or
-```
-GET ~/identifikatorverdi?$filter=systemid contains '4' or systemid contains '2'
-```
-#### not
-```
-GET ~/identifikatorverdi?$filter=not systemid contains '4'
-GET ~/identifikatorverdi?$filter=systemid contains '4' and not systemid contains '2'
 ```
