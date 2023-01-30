@@ -24,7 +24,7 @@ repositories {
 
 ```
 dependecies {
-    implementation 'no.fint:fint-antlr:1.0.0-beta-1'
+    implementation 'no.fintlabs:fint-antlr:1.1.0'
 }
 ```
 
