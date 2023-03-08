@@ -76,6 +76,34 @@ class ODataFilterComparisonSpec extends Specification {
         test.count() == 1
     }
 
+    def "String equals with spaces"() {
+        given:
+        def resources = Stream.of(newSamtykkeResource('sys tem-id- 2', '01010111111', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
+
+        when:
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi eq \'sys tem-id- 2\'')
+
+        then:
+        test.count() == 1
+    }
+
+    def "String equals with scandinavian letters"() {
+        given:
+        def resources = Stream.of(newSamtykkeResource('system-id-ØÆ1', '01010111111', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-2', '01010122222', '2020-11-25T10:30:30Z'),
+                newSamtykkeResource('system-id-3', '01010133333', '2020-11-25T10:30:30Z'),
+                new SamtykkeResource())
+
+        when:
+        def test = oDataFilterService.from(resources, 'systemId/identifikatorverdi eq \'system-id-ØÆ1\'')
+
+        then:
+        test.count() == 1
+    }
+
     def "String not equals"() {
         given:
         def resources = Stream.of(newSamtykkeResource('system-id-1', '01010111111', '2020-11-25T10:30:30Z'),

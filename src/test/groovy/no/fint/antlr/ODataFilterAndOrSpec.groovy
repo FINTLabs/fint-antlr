@@ -1,5 +1,6 @@
 package no.fint.antlr
 
+import no.fint.antlr.odata.ODataFilterService
 import no.fint.model.felles.Person
 import no.fint.model.felles.kompleksedatatyper.Identifikator
 import no.fint.model.felles.kompleksedatatyper.Periode
@@ -11,6 +12,8 @@ import java.time.ZonedDateTime
 import java.util.stream.Stream
 
 class ODataFilterAndOrSpec extends Specification{
+
+    ODataFilterService oDataFilterService = new ODataFilterService()
 
     def "String contains and"() {
         given:

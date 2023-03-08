@@ -54,7 +54,7 @@ CHAR
    ;
 
 CHARS
-   : '-' | '_' | ':' | '/' | '$' | '.' | '{' | '}' | NUMERIC | ALPHA
+   : '-' | '_' | ':' | '/' | '$' | '.' | '{' | '}' | ' ' | NUMERIC | ALPHA
    ;
 
 fragment NUMERIC
@@ -62,6 +62,6 @@ fragment NUMERIC
    ;
 
 fragment ALPHA
-   : ( 'A'..'Z' | 'a'..'z' )
+   : ('A'..'Z' | 'a'..'z' | 'Æ' | 'æ' | 'Ø' | 'ø' | 'Å' | 'å' | 'Ä' | 'ä' | 'Ö' | 'ö')
    ;
 
