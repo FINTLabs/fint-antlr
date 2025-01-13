@@ -6,6 +6,7 @@ import no.fint.model.felles.Person
 import no.fint.model.felles.kompleksedatatyper.Identifikator
 import no.fint.model.felles.kompleksedatatyper.Periode
 import no.fint.model.resource.Link
+import no.fint.model.resource.felles.VirksomhetResource
 import no.fint.model.resource.personvern.samtykke.BehandlingResource
 import no.fint.model.resource.personvern.samtykke.SamtykkeResource
 import spock.lang.Specification
@@ -421,6 +422,22 @@ class ODataFilterComparisonSpec extends Specification {
         return new BehandlingResource(
                 aktiv: aktiv
         )
+    }
+
+    def "String contains special characters"() {
+        given:
+        def resources = Stream.of(
+                new VirksomhetResource(organisasjonsnavn: "Donald Duck & Co"),
+                new VirksomhetResource(organisasjonsnavn: "Noen André AS"),
+                new VirksomhetResource(organisasjonsnavn: "🚀")
+        )
+
+        when:
+        def test = oDataFilterService.from(resources,
+                'organisasjonsnavn eq \'Donald Duck & Co\' or organisasjonsnavn eq \'Noen André AS\' or organisasjonsnavn eq \'🚀\'')
+
+        then:
+        test.count() == 3
     }
 
 }
