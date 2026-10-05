@@ -9,7 +9,7 @@ This java library is used to filter streams of objects based on grammars and par
 
 ## Technologies
 Project is created with:
-* Spring Boot version: 2.7.5
+* Spring Boot version: 4.1.1
 * ANTLR 4 version: 4.8
 
 ## Setup
