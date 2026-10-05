@@ -2,8 +2,8 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.5' apply false
-    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.springframework.boot' version '4.1.1' apply false
+    id 'io.spring.dependency-management' version '1.1.7'
     id 'java-library'
     id 'maven-publish'
     id 'groovy'
@@ -18,12 +18,15 @@ configurations {
     }
 }
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(23)
+    }
+}
 
 repositories {
     maven {
-        url 'https://repo.fintlabs.no/releases'
+        url = uri('https://repo.fintlabs.no/releases')
     }
     mavenLocal()
     mavenCentral()
@@ -36,7 +39,19 @@ publishing {
         }
     }
     repositories {
-        mavenLocal()
+        maven {
+            name = 'reposilite'
+            url = uri('https://repo.fintlabs.no/releases')
+
+            credentials {
+                username = System.getenv('REPOSILITE_USERNAME')
+                password = System.getenv('REPOSILITE_PASSWORD')
+            }
+
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
     }
 }
 
@@ -56,7 +71,8 @@ dependencies {
 
     testImplementation 'no.fint:fint-personvern-resource-model-java:3.18.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.spockframework:spock-spring:2.3-groovy-3.0'
+    testImplementation 'org.spockframework:spock-spring:2.4-groovy-5.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     antlr 'org.antlr:antlr4:4.9.3'
     api 'org.antlr:antlr4-runtime:4.9.3'
@@ -74,5 +90,3 @@ jar {
 test {
     useJUnitPlatform()
 }
-
-apply from: 'https://raw.githubusercontent.com/FINTLabs/fint-buildscripts/master/reposilite.ga.gradle'
