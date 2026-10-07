@@ -74,8 +74,8 @@ dependencies {
     testImplementation 'org.spockframework:spock-spring:2.4-groovy-5.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    antlr 'org.antlr:antlr4:4.9.3'
-    api 'org.antlr:antlr4-runtime:4.9.3'
+    antlr 'org.antlr:antlr4:4.13.2'
+    api 'org.antlr:antlr4-runtime:4.13.2'
 }
 
 generateGrammarSource {
