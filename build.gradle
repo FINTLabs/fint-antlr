@@ -67,7 +67,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    api 'commons-beanutils:commons-beanutils:1.9.4'
+    api 'commons-beanutils:commons-beanutils:1.11.0'
 
     testImplementation 'no.fint:fint-personvern-resource-model-java:3.18.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
